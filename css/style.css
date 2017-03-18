@@ -1,13 +1,18 @@
+/*Text*/
+
 .inhalt {
     color: white;
 }
 
+
+/*Überüberschriften*/
+
 h1 {
     text-align: center;
     text-decoration: underline;
-    font-family: "Xenonorm";
+    font-family: monospace;
     font-weight: lighter;
-    word-spacing: 10px;
+    word-spacing: 1px;
     letter-spacing: 2px;
     font-size: 50px;
     margin-top: 80px;
@@ -17,30 +22,48 @@ body {
     background-color: black;
 }
 
+
+/*Hyperlinks*/
+
 a {
     color: white;
     text-decoration: none;
 }
 
+
+/*Text Hyperlinks*/
+
 h3 {
     font-size: 30px;
 }
 
+
+/*Unterüberschriften Index.html*/
+
 h2 {
-    text-align: center;
     margin-top: 1px;
-    font-family: "Xenonorm";
-    font-weight: lighter;
+    text-align: center;
     text-decoration: underline;
+    font-family: monospace;
+    font-weight: lighter;
+    word-spacing: 1px;
+    letter-spacing: 2px;
 }
 
+
+/*Unterüberschriften*/
+
 h4 {
-    font-size: 25px;
+    font-size: 30px;
     text-decoration: underline;
     margin-bottom: 2px;
     margin-top: 10px;
 }
 
+
+/*Text*/
+
 h5 {
     margin-top: 2px;
+    font-size: 20px;
 }
