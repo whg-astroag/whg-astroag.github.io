@@ -86,3 +86,14 @@ input {
 textarea {
     background-color: black
 }
+
+
+/*Bild => Hyperlink*/
+
+.HlBlid {
+    margin-top: 30px;
+}
+
+.HlBlid:hover {
+    transform: scale(1.1, 1.1);
+}
