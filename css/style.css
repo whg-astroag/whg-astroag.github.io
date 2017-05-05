@@ -90,10 +90,21 @@ textarea {
 
 /*Bild => Hyperlink*/
 
+@keyframes HyperBild {
+    0% {
+        transform: scale(1.0, 1.0);
+    }
+    100% {
+        transform: scale(0.9, 0.9);
+    }
+}
+
 .HlBlid {
     margin-top: 30px;
 }
 
 .HlBlid:hover {
-    transform: scale(1.1, 1.1);
+    animation-name: HyperBild;
+    animation-duration: 1s;
+    transform: scale(0.9, 0.9)
 }

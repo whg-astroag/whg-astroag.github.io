@@ -64,7 +64,7 @@
                 <h5>Hier können Teilnemer der AG sich anmelden</h5>
                 <form id="kontaktformular" name="kontaktformular" action="">
                     <div>
-                        <label for="absender">Anmeldedaten:</label>
+                        <label for="absender">Passwort:</label>
                         <input type="text" id="absender" name="absender" />
                     </div>
                     <!--<div>
@@ -72,7 +72,8 @@
                         <textarea id="nachricht" name="nachricht" cols="20" rows="5"></textarea>
                     </div>-->
                     <div>
-                        <input type="submit" value="Anmelden" />
+                        <button id="Anmelden"> <input type="submit" value="Anmelden" /> </button>
+                        <p id="Troll" class="hidden">Falsches Passwort!</p>
                     </div>
                 </form>
             </div>
@@ -85,6 +86,7 @@
     <!-- Bootstrap Haupt-JavaScript -->
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.js"></script>
+    <script src="js/script.js"></script>
 </body>
 
 </html>
