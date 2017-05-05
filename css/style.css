@@ -99,10 +99,6 @@ textarea {
     }
 }
 
-.HlBlid {
-    margin-top: 30px;
-}
-
 .HlBlid:hover {
     animation-name: HyperBild;
     animation-duration: 1s;
