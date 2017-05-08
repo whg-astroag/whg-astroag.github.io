@@ -16,7 +16,10 @@ h1 {
     letter-spacing: 2px;
     font-size: 50px;
     margin-top: 80px;
+    text-shadow: 3px 2px grey;
 }
+
+/*Alles*/
 
 body {
     background-color: black;
@@ -49,6 +52,7 @@ h2 {
     font-weight: lighter;
     word-spacing: 1px;
     letter-spacing: 2px;
+    text-shadow: 3px 2px grey;
 }
 
 
@@ -103,4 +107,11 @@ textarea {
     animation-name: HyperBild;
     animation-duration: 1s;
     transform: scale(0.9, 0.9)
+}
+
+/*Rot*/
+
+.false {
+    color: red;
+    text-decoration: underline;
 }
