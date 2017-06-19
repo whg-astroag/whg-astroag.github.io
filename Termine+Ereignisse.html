@@ -23,9 +23,26 @@
 
     <!-- Eigenes CSS -->
     <link href="css/style.css" rel="stylesheet">
-    
+
     <script type="text/javascript" src="js/calendar.js"></script>
-	<link rel="stylesheet" type="text/css" href="css/calendar.css" />
+    <link rel="stylesheet" type="text/css" href="css/calendar.css" />
+
+    <script>
+        function Zeit() {
+            var Jetzt = new Date();
+            var Tag = Jetzt.getDate();
+            var Monat = Jetzt.getMonth() + 1;
+            var Jahr = Jetzt.getYear();
+            if (Jahr < 999) {
+                Jahr += 1900
+            }
+            var Vortag = ((Tag < 10) ? "0" : "");
+            var Vormon = ((Monat < 10) ? ".0" : ".");
+            var Datum = Vortag + Tag + Vormon + Monat + "." + Jahr;
+            document.write("<h5>" + Datum + "<\/h5>");
+        }
+
+    </script>
 </head>
 
 <body>
@@ -65,7 +82,12 @@
             <div class="inhalt">
                 <br/>
                 <h5>
-                    Diese Termine stehen Aktuell an:
+                    Für heute, den</h5>
+                <script>
+                    Zeit()
+
+                </script>
+                <h5>steht nichts an. <br/> Ansonsten stehen diese Termine aktuell an:</h5>
                 <h5>
                     <table border=1 id='calendar'>
                         <tr style='visibility:collapse;' hidden>

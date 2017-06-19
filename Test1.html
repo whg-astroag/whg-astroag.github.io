@@ -44,7 +44,7 @@
 
             <div id="navbar" class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="user.html">Chat</a></li>
+                    <li><a href="user.html">Startbereich</a></li>
                     <li class="active"><a href="Test1.html">Test 1</a></li>
                     <li><a href="Test2.html">Test 2</a></li>
                     <li><a href="Test3.html">Test 3</a></li>
@@ -68,20 +68,20 @@
             <br/>
             <h5>Für Venus, Erde und Neptun ist die Kreisbahn eine recht gute Näherung</h5>
             <img class="schwebebild" src="images/Planetenbahnen/Bild1Kreisbahnen.png" alt="Bild von einer Kreisbahn im koordinatensystem">
-            <h5 class="seite1">Die position des punktion des Punktes P auf einer Kreisbahn kann man in Kartesischen Koordinaten (x,y) aber auch in Polar Koordinaten angeben (r, φ(phi)) angeben, wo r der Radius und φ der winkel zu x-Achse ist.
+            <h5 class="seite1">Die Position der Punktion des Punktes P auf einer Kreisbahn kann man in Kartesischen Koordinaten (x, y) aber auch in Polar Koordinaten angeben (r, φ(phi)) angeben, wo r der Radius und φ der Winkel zu x-Achse ist.
                 <br/><br/><br/><br/><br/><br/><br/>
             </h5>
             <h5>
                 Es gilt: x = r*cos(φ) denn sin(φ) = y/r, außerdem gilt: y = r*sin(φ) denn sin(φ) = y/r <br/><br/><br/> Auf einer Kreisbahn hat ein Planet eine Konstante Winkelgeschwindigkeit:<br/> ω(omega) = φ/t, also φ = ω*t<br/> also gilt x = r*cos(ω t) und x = r*sin(ω t)<br/> mit ω = v/r = wurzel((G*M)/r)/r = wurzel((G*M)/r³, was man auch im Gravitationsgesetz sehen kann.<br/> kennt man die Umlaufzeit, dann verwendet man ω = (2π)/T <br/> also x = r*cos(((2π)/T)*t) und x = r*sin(((2π)/T)*t).<br/>
-                <a href="images/Planetenbahnen/Planetenbahnen.xlsx" class="hier">Hier kann man sich eine Excel Datei mit dem beispiel der Erde herunterladen</a><br/><br/></h5>
+                <a href="images/Planetenbahnen/Planetenbahnen.xlsx" class="hier">Hier kann man sich eine Excel Datei mit dem Beispiel der Erde herunterladen</a><br/><br/></h5>
             <h4>Ellipsenbahnen:</h4>
             <br/>
             <h5>
                 Nach dem ersten Kepler-Gesetz bewegen sich die Planeten auf einer Ellipsenbahn um die Sonne.<br/> Die Position eines Planeten auf seiner Bahn wird wieder in Polarkoordinaten<br/><br/> r: Abstand zur Sonne (in Astronomischen Einheiten(1 AE = Abstand Erde - Sonne))<br/> ν(ny): wahre Anomalie<br/><br/> angegeben.
                 <br/><br/>
-                <img src="images/Planetenbahnen/Bild1Ellipsenbahn.png" alt="Bild von den Elipsenbahnen"><br/><br/> Es gilt r = a*(1-e*cos(E)) <br/> tan(ν/2) = Wurzel((1+e)/(1-e))*tan(E/2), oder umgeformt ν = arctan(Umkehrfunktion zu tangens)(((1+e)/(1-e))*tan(E/2))<br/> mit a(schon vorher gegeben): große halbachse der Elipse<br/> und e(schon vother gegeben): numerische Exzentrität (legt bahnform fest)<br/><br/>
-                <img src="images/Planetenbahnen/Bild2Ellipsenbahn.png" alt="Bild von den Elipsenbahnen"><br/><br/> e = d/a und 0 kleiner e kleiner 1<br/> E = exzentrische Anomalie (im Bogenmaß angegeben)<br/> Die exzentrische Anomalie wird aus der Kepler-Gleichung:<br/> E-e*sin(E)=M (in Bogenmaß)(das Problem an der Formel ist, dass sie nur von einem Computerprogramm ausgerechnet werden kann)<br/> mit Hilfe der Fixpunktliteration des Newtonverfarens aus e und M berechnet<br/> Misst die mittlere Anomalie und wird in Abhängigkeit von der Zeit t berechnet:<br/> M = ((2π)/T)(t-to) mit T = Umlaufzeit des Planeten und to = Zeitpunkt des Periheldurchgangs<br/><br/>
-                <img src="images/Planetenbahnen/Bild3Ellipsenbahn.png" alt="Bild von den Elipsenbahnen"><br/><br/> ist T gegeben kann man jetzt für jeden Zeitpunkt t die Position des Planeten auf seiner Ellipsenbahn berechnung.
+                <img src="images/Planetenbahnen/Bild1Ellipsenbahn.png" alt="Bild von den Elipsenbahnen"><br/><br/> Es gilt r = a*(1-e*cos(E)) <br/> tan(ν/2) = Wurzel((1+e)/(1-e))*tan(E/2), oder umgeformt ν = arctan(Umkehrfunktion zu Tangens)(((1+e)/(1-e))*tan(E/2))<br/> mit a(schon vorher gegeben): große Halbachse der Ellipse<br/> und e(schon vorher gegeben): numerische Exzentrität (legt die Bahnform fest)<br/><br/>
+                <img src="images/Planetenbahnen/Bild2Ellipsenbahn.png" alt="Bild von den Elipsenbahnen"><br/><br/> e = d/a und 0 kleiner e kleiner 1<br/> E = exzentrische Anomalie (im Bogenmaß angegeben)<br/> Die exzentrische Anomalie wird aus der Kepler-Gleichung:<br/> E-e*sin(E)=M (in Bogenmaß)(das Problem an der Formel ist, dass sie nur von einem Computerprogramm ausgerechnet werden kann)<br/> mit Hilfe der Fixpunktliteration des Newtonverfahrens aus e und M berechnet<br/> Misst die mittlere Anomalie und wird in Abhängigkeit von der Zeit t berechnet:<br/> M = ((2π)/T)(t-to) mit T = Umlaufzeit des Planeten und to = Zeitpunkt des Periheldurchgangs<br/><br/>
+                <img src="images/Planetenbahnen/Bild3Ellipsenbahn.png" alt="Bild von den Elipsenbahnen"><br/><br/> ist T gegeben kann man jetzt für jeden Zeitpunkt t die Position des Planeten auf seiner Ellipsenbahn berechnen.
             </h5>
             <hr/>
         </div>

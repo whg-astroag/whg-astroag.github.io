@@ -1,13 +1,9 @@
 <!DOCTYPE html>
-<html lang="de">
-
+<html>
 <head>
     <meta charset="utf-8">
 
     <!--  Dokumentkompatibilitätsmodus für IE-->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <meta name="description" content="Seite der Astronnomie AG am Leverkusener Wener-Heisenberg-Gymnasium">
     <meta name="author" content="AstronomieAG">
@@ -23,10 +19,19 @@
 
     <!-- Eigenes CSS -->
     <link href="css/style.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+        }
+        
+        canvas {
+            width: 100%;
+            height: 100%
+        }
+    </style>
 </head>
 
 <body>
-
     <nav class="navbar navbar-inverse navbar-fixed-top">
 
         <div class="container">
@@ -44,7 +49,7 @@
 
             <div id="navbar" class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="user.html">Chat</a></li>
+                    <li><a href="user.html">Startbereich</a></li>
                     <li><a href="Test1.html">Test 1</a></li>
                     <li class="active"><a href="Test2.html">Test 2</a></li>
                     <li><a href="Test3.html">Test 3</a></li>
@@ -55,24 +60,37 @@
 
         </div>
     </nav>
+    <h1>Experimentelle Programmierung 1</h1>
+    <script src="js/three.min.js"></script>
+    <script>
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-    <div class="container">
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
 
-        <div class="inhalt">
-            <h1>Experimentelle Programmierung 2</h1>
-            <div class="inhalt">
-                <h5>Aktuell wird nichts getestet.
-                <hr/>
-            </div>
+        var geometry = new THREE.BoxGeometry(1, 1, 1);
+        var material = new THREE.MeshBasicMaterial({
+            color: 0x005E99
+        });
+        // var material = new THREE.MeshPhongMaterial( { map:                 THREE.ImageUtils.loadTexture('https://www.gravatar.com/avatar/af8c21275e3a73b3349c0de336186106?s=256&d=identicon') } );
 
-        </div>
-    </div>
-    <!-- /.container -->
+        var cube = new THREE.Mesh(geometry, material);
+        scene.add(cube);
 
+        camera.position.z = 5;
 
-    <!-- Bootstrap Haupt-JavaScript -->
-    <script src="js/jquery.js"></script>
-    <script src="js/bootstrap.js"></script>
+        var render = function() {
+            requestAnimationFrame(render);
+
+            cube.rotation.x += 0.1;
+            cube.rotation.y += 0.1;
+
+            renderer.render(scene, camera);
+        };
+
+        render();
+    </script>
 </body>
-
 </html>

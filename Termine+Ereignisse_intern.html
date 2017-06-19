@@ -23,9 +23,26 @@
 
     <!-- Eigenes CSS -->
     <link href="css/style.css" rel="stylesheet">
-    
+
     <script type="text/javascript" src="js/calendar.js"></script>
-	<link rel="stylesheet" type="text/css" href="css/calendar.css" />
+    <link rel="stylesheet" type="text/css" href="css/calendar.css" />
+
+    <script>
+        function Zeit() {
+            var Jetzt = new Date();
+            var Tag = Jetzt.getDate();
+            var Monat = Jetzt.getMonth() + 1;
+            var Jahr = Jetzt.getYear();
+            if (Jahr < 999) {
+                Jahr += 1900
+            }
+            var Vortag = ((Tag < 10) ? "0" : "");
+            var Vormon = ((Monat < 10) ? ".0" : ".");
+            var Datum = Vortag + Tag + Vormon + Monat + "." + Jahr;
+            document.write("<h5>" + Datum + "<\/h5>");
+        }
+
+    </script>
 </head>
 
 <body>
@@ -47,7 +64,7 @@
 
             <div id="navbar" class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="user.html">Chat</a></li>
+                    <li><a href="user.html">Startbereich</a></li>
                     <li><a href="Test1.html">Test 1</a></li>
                     <li><a href="Test2.html">Test 2</a></li>
                     <li><a href="Test3.html">Test 3</a></li>
@@ -66,8 +83,13 @@
             <div class="inhalt">
                 <br/>
                 <h5>
-                    Diese Termine Stehen Aktuell an:
-                    <h5>
+                    Für heute, den</h5>
+                <script>
+                    Zeit()
+
+                </script>
+                <h5>steht nichts an. <br/> Ansonsten stehen diese Termine aktuell an:</h5>
+                <h5>
                     <table border=1 id='calendar'>
                         <tr style='visibility:collapse;' hidden>
                             <td colspan=7 id='date_memory'>---</td>
@@ -161,10 +183,9 @@
                     <form id='myform'>
                         <input id='datum' size=30/>
                     </form>
+                    <hr/>
                 </h5>
-                <hr/>
-                </h5>
-                
+
             </div>
 
         </div>
