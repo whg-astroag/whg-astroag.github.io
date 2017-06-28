@@ -19,6 +19,7 @@ h1 {
     text-shadow: 3px 2px grey;
 }
 
+
 /*Alles*/
 
 body {
@@ -108,6 +109,7 @@ textarea {
     animation-duration: 1s;
 }
 
+
 /*Rot*/
 
 .false {
@@ -115,14 +117,20 @@ textarea {
     text-decoration: underline;
 }
 
+
 /*Bilder die schweben*/
 
 .schwebebild {
     position: absolute;
 }
 
+
 /*verschiebt den Text um so und so viel nach Rechts*/
 
 .seite1 {
     margin-left: 220px;
+}
+
+canvas {
+    background-color: #ffffff;
 }
