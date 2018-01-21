@@ -23,7 +23,8 @@ h1 {
 /*Alles*/
 
 body {
-    background-color: black;
+    /*background-color: black;*/
+    background-image: url(Background/HDR_onlyStars_02.png);
 }
 
 
@@ -85,11 +86,11 @@ h5 {
 /*Textfelder*/
 
 input {
-    background-color: black
+    background-image: url(Background/HDR_onlyStars_02.png);
 }
 
 textarea {
-    background-color: black
+    background-image: url(Background/HDR_onlyStars_02.png);
 }
 
 
