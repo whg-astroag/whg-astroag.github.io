@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>js test</title>
+</head>
+
+<body>
+    <h1>TEST</h1>
+
+    <script src="http://gamingJS.com/Three.js"></script>
+    <script src="http://gamingJS.com/ChromeFixes.js"></script>
+    <script>
+        var camera, scene, renderer;
+        var geometry, material, mesh;
+
+        init();
+        animate();
+
+        function init() {
+            scene = new THREE.Scene();
+            const size_x = window.innerWidth - 50;
+            const size_y = window.innerHeight - 50;
+
+            var aspect = size_x / size_y;
+            camera = new THREE.PerspectiveCamera(75, aspect, 1, 1000);
+            camera.position.z = 500;
+            scene.add(camera);
+
+            geometry = new THREE.IcosahedronGeometry(200, 1);
+            material = new THREE.MeshBasicMaterial({
+                color: 0x000000,
+                wireframe: true,
+                wireframeLinewidth: 2
+            });
+
+            mesh = new THREE.Mesh(geometry, material);
+            scene.add(mesh);
+
+            renderer = new THREE.CanvasRenderer();
+            renderer.setClearColorHex(0xffffff);
+            renderer.setSize(size_x, size_y);
+
+            document.body.appendChild(renderer.domElement);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            mesh.rotation.x = Date.now() * 0.0005;
+            mesh.rotation.y = Date.now() * 0.001;
+
+            renderer.render(scene, camera);
+        }
+    </script>
+
+    <h1>teest<br />
+        tt<br />
+        tt<br />
+        tt<br />
+        tt<br />
+        tt<br />
+        tt<br />
+        tt<br />
+        tt<br />
+        tt<br />
+        tt<br />
+        tt<br />
+        tt<br />
+        tt<br />
+        tt<br />
+        tt<br />
+        tt<br />
+        tt<br />
+    </h1>
+</body></html>
