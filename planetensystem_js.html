@@ -11,8 +11,8 @@
 <body>
     <h1 style="color: white">Das Planetensystem</h1>
 
-    <script src="http://gamingJS.com/Three.js"></script>
-    <script src="http://gamingJS.com/ChromeFixes.js"></script>
+    <script src="js/Three.min.js"></script>
+    <script src="js/chromeFixes.js"></script>
     <script>
         var scene = new THREE.Scene();
 
@@ -149,6 +149,7 @@
             else if (camera == earth_mars_cam) camera = earth_moon_cam;
             else camera = above_cam;
         }
+
     </script>
 
     <h3 style="color: white; margin-bottom: 0px;">Steuerung:</h3> <br />
@@ -158,4 +159,6 @@
         + = schneller<br />
         - = langsamer <br />
     </h5>
-</body></html>
+</body>
+
+</html>
