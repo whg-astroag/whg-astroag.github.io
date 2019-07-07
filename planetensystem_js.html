@@ -23,7 +23,7 @@
         var canvas = document.querySelector('#c');
         var aspect_ratio = window.innerWidth / window.innerHeight;
         var above_cam = new THREE.PerspectiveCamera(75, aspect_ratio, 0.01, 1e6)
-        above_cam.position.z = 2000;
+        above_cam.position.z = 25000;
         scene.add(above_cam);
 
         var earth_mars_cam = new THREE.PerspectiveCamera(75, aspect_ratio, 1, 1e6);
@@ -46,7 +46,7 @@
         var surface = new THREE.MeshPhongMaterial({
             ambient: 0xFFD700
         });
-        var star = new THREE.SphereGeometry(4.65e1, 20, 20);
+        var star = new THREE.SphereGeometry(150, 20, 20);
         var sun = new THREE.Mesh(star, surface);
         scene.add(sun);
 
@@ -61,7 +61,7 @@
             ambient: 0x1a1a1a,
             color: 0x555555
         });
-        var planet = new THREE.SphereGeometry(3.26e1 /*e-2*/ , 20, 20);
+        var planet = new THREE.SphereGeometry(60, 20, 20);
         var merkur = new THREE.Mesh(planet, surface);
         merkur.position.set(387, 0, 0);
         scene.add(merkur);
@@ -71,7 +71,7 @@
             ambient: 0x1a1a1a,
             color: 0xffff44
         });
-        var planet = new THREE.SphereGeometry(3.26e1, 20, 20);
+        var planet = new THREE.SphereGeometry(60, 20, 20);
         var venus = new THREE.Mesh(planet, surface);
         venus.position.set(723, 0, 0);
         scene.add(venus);
@@ -81,32 +81,82 @@
             ambient: 0x1a1a1a,
             color: 0x0000cd
         });
-        var planet = new THREE.SphereGeometry(20, 20, 15);
+        var planet = new THREE.SphereGeometry(60, 20, 15);
         var earth = new THREE.Mesh(planet, surface);
         earth.position.set(1e3, 0, 0);
         scene.add(earth);
-
-        //Mars
-        var surface = new THREE.MeshPhongMaterial({
-            ambient: 0x1a1a1a,
-            color: 0xb22222
-        });
-        var planet = new THREE.SphereGeometry(20, 20, 15);
-        var mars = new THREE.Mesh(planet, surface);
-        mars.position.set(1.524e3, 0, 0);
-        scene.add(mars);
 
         //Mond
         var surface = new THREE.MeshPhongMaterial({
             ambient: 0x1a1a1a,
             color: 0xffffff
         });
-        var planet = new THREE.SphereGeometry(15, 30, 25);
+        var planet = new THREE.SphereGeometry(50, 30, 25);
         var moon = new THREE.Mesh(planet, surface);
         earth.add(earth_moon_cam);
         earth.add(earth_mars_cam)
         earth_moon_cam.rotation.set(Math.PI / 2, 0, 0);
         scene.add(moon);
+
+        //Mars
+        var surface = new THREE.MeshPhongMaterial({
+            ambient: 0x1a1a1a,
+            color: 0xb22222
+        });
+        var planet = new THREE.SphereGeometry(60, 20, 15);
+        var mars = new THREE.Mesh(planet, surface);
+        mars.position.set(1.524e3, 0, 0);
+        scene.add(mars);
+
+        //Jupiter
+        var surface = new THREE.MeshPhongMaterial({
+            ambient: 0x1a1a1a,
+            color: 0xb28222
+        });
+        var planet = new THREE.SphereGeometry(60, 20, 15);
+        var jupiter = new THREE.Mesh(planet, surface);
+        jupiter.position.set(5.203e3, 0, 0);
+        scene.add(jupiter);
+
+        //Saturn
+        var surface = new THREE.MeshPhongMaterial({
+            ambient: 0x1a1a1a,
+            color: 0xb24222
+        });
+        var planet = new THREE.SphereGeometry(60, 20, 15);
+        var saturn = new THREE.Mesh(planet, surface);
+        saturn.position.set(9.5826e3, 0, 0);
+        scene.add(saturn);
+
+        //Uranus
+        var surface = new THREE.MeshPhongMaterial({
+            ambient: 0x1a1a1a,
+            color: 0x7777aa
+        });
+        var planet = new THREE.SphereGeometry(60, 20, 15);
+        var uranus = new THREE.Mesh(planet, surface);
+        uranus.position.set(19.201e3, 0, 0);
+        scene.add(uranus);
+
+        //Neptun
+        var surface = new THREE.MeshPhongMaterial({
+            ambient: 0x1a1a1a,
+            color: 0x2222aa
+        });
+        var planet = new THREE.SphereGeometry(60, 20, 15);
+        var neptun = new THREE.Mesh(planet, surface);
+        neptun.position.set(30.070e3, 0, 0);
+        scene.add(neptun);
+
+        //Pluto
+        var surface = new THREE.MeshPhongMaterial({
+            ambient: 0x1a1a1a,
+            color: 0xd2b48c
+        });
+        var planet = new THREE.SphereGeometry(60, 20, 15);
+        var pluto = new THREE.Mesh(planet, surface);
+        pluto.position.set(39.482e3, 0, 0);
+        scene.add(pluto);
 
         var time = Math.floor(Math.random() * 100000),
             speed = 1,
@@ -137,11 +187,26 @@
             var e_pos = pos_planet(365.256, 0.0167, 1e3, time / 100);
             earth.position.set(e_pos[0], e_pos[1], 0);
 
-            var mo_pos = pos_planet(27.3217, 0.0549, 2.5695552898e1, time / 100); // Abstand zu Erde nicht Maßstabsgetreu
+            var mo_pos = pos_planet(27.3217, 0.0549, 70, time / 100); // Abstand zu Erde nicht Maßstabsgetreu
             moon.position.set(mo_pos[0] + e_pos[0], mo_pos[1] + e_pos[1], 0);
 
-            var ma_pos = pos_planet(779.94, 0.0935, 1.524e3, time / 100);
+            var ma_pos = pos_planet(686.980, 0.0935, 1.524e3, time / 100);
             mars.position.set(ma_pos[0], ma_pos[1], 0);
+
+            var j_pos = pos_planet(4330, 0.0484, 5.203e3, time / 100);
+            jupiter.position.set(j_pos[0], j_pos[1], 0);
+
+            var s_pos = pos_planet(10751.805, 0.05648, 9.5826e3, time / 100);
+            saturn.position.set(s_pos[0], s_pos[1], 0);
+
+            var u_pos = pos_planet(30664.015, 0.0472, 19.201e3, time / 100);
+            uranus.position.set(u_pos[0], u_pos[1], 0);
+
+            var n_pos = pos_planet(60148.35, 0.00859, 30.070e3, time / 100);
+            neptun.position.set(n_pos[0], n_pos[1], 0);
+
+            var p_pos = pos_planet(90498, 0.2488, 39.482e3, time / 100);
+            pluto.position.set(p_pos[0], p_pos[1], 0);
 
             var y_diff = mars.position.y - earth.position.y;
             var x_diff = mars.position.x - earth.position.x;
