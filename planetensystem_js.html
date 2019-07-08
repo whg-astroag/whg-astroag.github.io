@@ -9,15 +9,23 @@
     <meta name="author" content="AstronomieAG">
     <link rel="icon" href="images/cropped-supermoon-n-14-11-2016-g11.png">
     <title>Das Planetensystem</title>
+    <style>
+        ::-webkit-scrollbar {
+            display: block;
+
+        }
+
+    </style>
 </head>
 
 <body>
     <h1 style="color: white">Das Planetensystem</h1>
+    <h5 style="color: white">für mehr Informationen scrollen. Vollbildmodus (F11) wird empfohlen.</h5>
 
     <script src="js/three.min.js"></script>
     <script src="js/chromeFixes.js"></script>
-    <canvas style="z-index: -999; width: 97vw; height: 97vw" id="c">Your browser does not support the HTML 5 Canvas. </canvas>
-    <canvas style="position: absolute; z-index: 100; width: 97vw; height: 97vw" id="ct"></canvas>
+    <canvas style="z-index: -9; width: 97vw; height: 97vw" id="c">Your browser does not support the HTML 5 Canvas. </canvas>
+    <canvas style="position: absolute; z-index: 5; width: 97vw; height: 97vw" id="ct"></canvas>
     <script>
         var c = document.getElementById("ct");
         c.height = window.innerWidth * 0.97;
@@ -66,10 +74,10 @@
         scene.add(above_cam);
 
         var earth_mars_cam = new THREE.PerspectiveCamera(75, aspect_ratio, 1, 1e6);
-        //        scene.add(earth_mars_cam);
+        scene.add(earth_mars_cam);
 
         var earth_moon_cam = new THREE.PerspectiveCamera(75, aspect_ratio, 1, 1e6);
-        //        scene.add(earth_moon_cam);
+        scene.add(earth_moon_cam);
 
         var camera = above_cam;
         var renderer = new THREE.WebGLRenderer({
@@ -82,6 +90,8 @@
 
         //in AE * 1000 bzw e3
         geo_resolution = 30;
+        moon_orbit_add = 0;
+        focus = 0;
 
         //Sonne
         var surface = new THREE.MeshPhongMaterial({
@@ -134,10 +144,6 @@
         });
         var planet = new THREE.SphereGeometry(0.02323562484 / 2, geo_resolution, geo_resolution);
         var moon = new THREE.Mesh(planet, surface);
-        earth.add(earth_moon_cam);
-        earth.add(earth_mars_cam);
-        earth_moon_cam.position.x += 0.02323562484 / 2;
-        earth_mars_cam.position.x += 0.02323562484 / 2;
         scene.add(moon);
 
         //Mars
@@ -227,9 +233,9 @@
             updateText([polar[0] / (above_cam.position.z * 1e-3), polar[1]], "Erde");
 
             var polar = polar_planet(27.3217, 0.0549, 2.5695552898, time / 100);
-            moon.position.set(polar[0] * Math.cos(polar[1]) + polar_e[0] * Math.cos(polar_e[1]),
-                polar[0] * Math.sin(polar[1]) + polar_e[0] * Math.sin(polar_e[1]), 0);
-            updateTextMoon([polar[0] / (above_cam.position.z * 1e-3), polar[1]], [polar_e[0] / (above_cam.position.z * 1e-3), polar_e[1]], "Mond");
+            moon.position.set((polar[0] + moon_orbit_add) * Math.cos(polar[1]) + polar_e[0] * Math.cos(polar_e[1]),
+                (polar[0] + moon_orbit_add) * Math.sin(polar[1]) + polar_e[0] * Math.sin(polar_e[1]), 0);
+            updateTextMoon([(polar[0] + moon_orbit_add) / (above_cam.position.z * 1e-3), polar[1]], [polar_e[0] / (above_cam.position.z * 1e-3), polar_e[1]], "Mond");
 
             var polar = polar_planet(686.980, 0.0935, 1.524e3, time / 100);
             mars.position.set(polar[0] * Math.cos(polar[1]), polar[0] * Math.sin(polar[1]), 0);
@@ -256,12 +262,16 @@
             var angle = Math.atan2(x_diff, y_diff);
 
             earth_mars_cam.rotation.set(Math.PI / 2, -angle, 0);
+            earth_mars_cam.position = earth.position;
 
             var y_diff = moon.position.y - earth.position.y;
             var x_diff = moon.position.x - earth.position.x;
             var angle = Math.atan2(x_diff, y_diff);
 
+            earth_moon_cam.position = earth.position;
             earth_moon_cam.rotation.set(Math.PI / 2, -angle, 0);
+
+            update_above_cam();
         }
 
         animate();
@@ -324,94 +334,214 @@
                 disable_update();
             } else {
                 camera = above_cam;
-                enable_update();
+                if (!document.getElementById("check_names").checked) enable_update();
             }
         }
 
         function scale_sun(val) {
-            sun.scale.x = 4.6547587 * 2 * val;
-            sun.scale.y = 4.6547587 * 2 * val;
-            sun.scale.z = 4.6547587 * 2 * val;
+            sun.scale.x = 4.6547587 * 2 + val * 1;
+            sun.scale.y = 4.6547587 * 2 + val * 1;
+            sun.scale.z = 4.6547587 * 2 + val * 1;
+        }
+
+        function scale_orbit_m(val) {
+            moon_orbit_add = val * 100;
         }
 
         function scale(val) {
-            merkur.scale.x = 3.2616774e-2 * val;
-            merkur.scale.y = 3.2616774e-2 * val;
-            merkur.scale.z = 3.2616774e-2 * val;
+            merkur.scale.x = 3.2616774e-2 + val * 100;
+            merkur.scale.y = 3.2616774e-2 + val * 100;
+            merkur.scale.z = 3.2616774e-2 + val * 100;
 
-            venus.scale.x = 0.0404537843 * 2 * val;
-            venus.scale.y = 0.0404537843 * 2 * val;
-            venus.scale.z = 0.0404537843 * 2 * val;
+            venus.scale.x = 0.0404537843 * 2 + val * 100;
+            venus.scale.y = 0.0404537843 * 2 + val * 100;
+            venus.scale.z = 0.0404537843 * 2 + val * 100;
 
-            earth.scale.x = 0.0852707324 * val;
-            earth.scale.y = 0.0852707324 * val;
-            earth.scale.z = 0.0852707324 * val;
+            earth.scale.x = 0.0852707324 + val * 100;
+            earth.scale.y = 0.0852707324 + val * 100;
+            earth.scale.z = 0.0852707324 + val * 100;
 
-            moon.scale.x = 0.02323562484 * val;
-            moon.scale.y = 0.02323562484 * val;
-            moon.scale.z = 0.02323562484 * val;
+            moon.scale.x = 0.02323562484 + val * 100;
+            moon.scale.y = 0.02323562484 + val * 100;
+            moon.scale.z = 0.02323562484 + val * 100;
 
-            mars.scale.x = 0.04540438957 * val;
-            mars.scale.y = 0.04540438957 * val;
-            mars.scale.z = 0.04540438957 * val;
+            mars.scale.x = 0.04540438957 + val * 100;
+            mars.scale.y = 0.04540438957 + val * 100;
+            mars.scale.z = 0.04540438957 + val * 100;
 
-            jupiter.scale.x = 0.95578900509 * val;
-            jupiter.scale.y = 0.95578900509 * val;
-            jupiter.scale.z = 0.95578900509 * val;
+            jupiter.scale.x = 0.95578900509 + val * 100;
+            jupiter.scale.y = 0.95578900509 + val * 100;
+            jupiter.scale.z = 0.95578900509 + val * 100;
 
-            saturn.scale.x = 0.80573339337 * val;
-            saturn.scale.y = 0.80573339337 * val;
-            saturn.scale.z = 0.80573339337 * val;
+            saturn.scale.x = 0.80573339337 + val * 100;
+            saturn.scale.y = 0.80573339337 + val * 100;
+            saturn.scale.z = 0.80573339337 + val * 100;
 
-            uranus.scale.x = 0.34170272452 * val;
-            uranus.scale.y = 0.34170272452 * val;
-            uranus.scale.z = 0.34170272452 * val;
+            uranus.scale.x = 0.34170272452 + val * 100;
+            uranus.scale.y = 0.34170272452 + val * 100;
+            uranus.scale.z = 0.34170272452 + val * 100;
 
-            neptun.scale.x = 0.33107423099 * val;
-            neptun.scale.y = 0.33107423099 * val;
-            neptun.scale.z = 0.33107423099 * val;
+            neptun.scale.x = 0.33107423099 + val * 100;
+            neptun.scale.y = 0.33107423099 + val * 100;
+            neptun.scale.z = 0.33107423099 + val * 100;
+        }
+
+        function update_above_cam() {
+            z = above_cam.position.z;
+            switch (focus) {
+                case 0:
+                    above_cam.position.set(sun.position.x, sun.position.y, z);
+                    break;
+                case 1:
+                    above_cam.position.set(merkur.position.x, merkur.position.y, z);
+                    break;
+                case 2:
+                    above_cam.position.set(venus.position.x, venus.position.y, z);
+                    break;
+                case 3:
+                    above_cam.position.set(earth.position.x, earth.position.y, z);
+                    break;
+                case 4:
+                    above_cam.position.set(moon.position.x, moon.position.y, z);
+                    break;
+                case 5:
+                    above_cam.position.set(mars.position.x, mars.position.y, z);
+                    break;
+            }
+        }
+
+        function update_focus(val) {
+            focus = parseInt(val);
         }
 
     </script>
+    <div id="dragable">
+        <h4 style="color: white" id="dragableheader">drücken und halten um zu bewegen</h3>
+            <h5 style="color: white; margin-top: 0px;">
+                C = Kamera wechseln<br />
+                P = Pause<br />
+                w/s = Zoomen<br />
+                +/- = schnelle/langsamer<br /><br />
+                aktuelle Geschwindikeit: <a id="speed">1</a><br />
+                Abstand: <a id="distance">50</a> AE <br />
+                Planetengröße + <a id="size">0</a> AE<br />
+                <input type="range" min="0" max="75" value="0" id="planet_size"> <br />
+                Sonnengröße + <a id="size_s">0</a> AE<br />
+                <input type="range" min="0" max="25" value="0" id="sun_size"> <br />
+                Mondorbit + <a id="orbit_m">0</a> AE<br />
+                <input type="range" min="0" max="10" value="0" id="orbit_moon"> <br />
+                Planetennamen verstecken: <input type="checkbox" id="check_names" onclick="toggleNames()"><br />
+                Fokus auf <select id="fokus">
+                    <option value="0" selected>Sonne</option>
+                    <option value="1">Merkur</option>
+                    <option value="2">Venus</option>
+                    <option value="3">Erde</option>
+                    <option value="4">Mond</option>
+                    <option value="5">Mars</option>
+                </select>
+            </h5>
+    </div>
+    <style>
+        #dragableheader {
+            padding: 10px;
+            cursor: move;
+            z-index: 10;
+            background-color: rgba(200, 200, 200, 0.25);
+        }
 
-    <h3 style="color: white; margin-bottom: 0px;">Steuerung:</h3> <br />
-    <h5 style="color: white; margin-top: 0px;">
-        C = Kamera wechseln<br />
-        P = Pause<br />
-        w/s = Zoomen<br />
-        +/- = schnelle/langsamer<br /><br />
-        aktuelle Geschwindikeit: <a id="speed">1</a><br />
-        Abstand: <a id="distance">50</a> AE <br />
-        Planetengröße (1 = reale Größe): <a id="size">1</a><br />
-        <input type="range" min="1" max="7500" value="1" id="planet_size"> <br />
-        Sonnengröße (1 = reale Größe): <a id="size_s">1</a><br />
-        <input type="range" min="1" max="25" value="1" id="sun_size"> <br />
-        Planetennamen verstecken: <input type="checkbox" id="check_names" onclick="toggleNames()">
-    </h5>
+        #dragable {
+            position: absolute;
+            z-index: 9;
+            background-color: rgba(100, 100, 100, 0.25);
+            border: 1px solid #333333;
+            text-align: center;
+        }
+
+    </style>
+    <script>
+        dragElement(document.getElementById("dragable"));
+
+        function dragElement(elmnt) {
+            var pos1 = 0,
+                pos2 = 0,
+                pos3 = 0,
+                pos4 = 0;
+            if (document.getElementById(elmnt.id + "header")) {
+                // if present, the header is where you move the DIV from:
+                document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+            } else {
+                // otherwise, move the DIV from anywhere inside the DIV: 
+                elmnt.onmousedown = dragMouseDown;
+            }
+
+            function dragMouseDown(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // get the mouse cursor position at startup:
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                // call a function whenever the cursor moves:
+                document.onmousemove = elementDrag;
+            }
+
+            function elementDrag(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // calculate the new cursor position:
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                // set the element's new position:
+                elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+                elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+            }
+
+            function closeDragElement() {
+                // stop moving when mouse button is released:
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        }
+
+    </script>
     <script>
         var slider_p = document.getElementById("planet_size");
         slider_p.oninput = function() {
             scale(slider_p.value);
-            document.getElementById("size").innerHTML = slider_p.value;
+            document.getElementById("size").innerHTML = slider_p.value * 1e-1;
         }
 
         var slider_s = document.getElementById("sun_size");
         slider_s.oninput = function() {
             scale_sun(slider_s.value);
-            document.getElementById("size_s").innerHTML = slider_s.value;
+            document.getElementById("size_s").innerHTML = slider_s.value * 1e-3;
+        }
+
+        var slider_m = document.getElementById("orbit_moon");
+        slider_m.oninput = function() {
+            scale_orbit_m(slider_m.value);
+            document.getElementById("orbit_m").innerHTML = slider_m.value * 1e-1;
         }
 
         function toggleNames() {
             var checkBox = document.getElementById("check_names");
-            if (checkBox.checked == true) {
+            if (checkBox.checked) {
                 disable_update();
             } else if (camera == above_cam) {
                 enable_update();
             }
         }
 
+        var drop_f = document.getElementById("fokus");
+        drop_f.oninput = function() {
+            update_focus(drop_f.value);
+        }
+
     </script>
-    <a href="https://whg-astro-ag.com/das-planetensystem/das-planetensystem-in-digital/">zurück zur Website</a>
+    <br />
+    <a href="https://whg-astro-ag.com/das-planetensystem/das-planetensystem-in-digital/">zurück zur Website</a><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
 </body>
 
 </html>
