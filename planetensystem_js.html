@@ -54,6 +54,7 @@
                     (polarMoon[0] * Math.sin(-polarMoon[1])) + (polarPlanet[0] * Math.sin(-polarPlanet[1])) + window.innerWidth * 0.97 * 0.5);
             }
         }
+
     </script>
     <script>
         var scene = new THREE.Scene();
@@ -189,16 +190,6 @@
         neptun.position.set(30.070e3, 0, 0);
         scene.add(neptun);
 
-        //Pluto
-        var surface = new THREE.MeshPhongMaterial({
-            ambient: 0x1a1a1a,
-            color: 0xd2b48c
-        });
-        var planet = new THREE.SphereGeometry(0.01586920983 / 2, geo_resolution, geo_resolution);
-        var pluto = new THREE.Mesh(planet, surface);
-        pluto.position.set(39.482e3, 0, 0);
-        scene.add(pluto);
-
         var time = Math.floor(Math.random() * 1e8),
             speed = 1,
             pause = false;
@@ -259,10 +250,6 @@
             var polar = polar_planet(60148.35, 0.00859, 30.070e3, time / 100);
             neptun.position.set(polar[0] * Math.cos(polar[1]), polar[0] * Math.sin(polar[1]), 0);
             updateText([polar[0] / (above_cam.position.z * 1e-3), polar[1]], "Neptun");
-
-            var polar = polar_planet(90498, 0.2488, 39.482e3, time / 100);
-            pluto.position.set(polar[0] * Math.cos(polar[1]), polar[0] * Math.sin(polar[1]), 0);
-            updateText([polar[0] / (above_cam.position.z * 1e-3), polar[1]], "Pluto");
 
             var y_diff = mars.position.y - earth.position.y;
             var x_diff = mars.position.x - earth.position.x;
@@ -383,11 +370,8 @@
             neptun.scale.x = 0.33107423099 * val;
             neptun.scale.y = 0.33107423099 * val;
             neptun.scale.z = 0.33107423099 * val;
-
-            pluto.scale.x = 0.01586920983 * val;
-            pluto.scale.y = 0.01586920983 * val;
-            pluto.scale.z = 0.01586920983 * val;
         }
+
     </script>
 
     <h3 style="color: white; margin-bottom: 0px;">Steuerung:</h3> <br />
@@ -425,6 +409,9 @@
                 enable_update();
             }
         }
+
     </script>
     <a href="https://whg-astro-ag.com/das-planetensystem/das-planetensystem-in-digital/">zurück zur Website</a>
-</body></html>
+</body>
+
+</html>
