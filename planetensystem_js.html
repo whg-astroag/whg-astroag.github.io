@@ -16,37 +16,77 @@
 
     <script src="js/three.min.js"></script>
     <script src="js/chromeFixes.js"></script>
-    <canvas id="c"></canvas>
+    <canvas style="z-index: -999; width: 97vw; height: 97vw" id="c">Your browser does not support the HTML 5 Canvas. </canvas>
+    <canvas style="position: absolute; z-index: 100; width: 97vw; height: 97vw" id="ct"></canvas>
+    <script>
+        var c = document.getElementById("ct");
+        c.height = window.innerWidth * 0.97;
+        c.width = window.innerWidth * 0.97;
+        var ctx = c.getContext("2d");
+        ctx.fillStyle = "white";
+        ctx.font = "15px Verdana";
+        var update = true;
+
+        function disable_update() {
+            update = false;
+            clear();
+        }
+
+        function enable_update() {
+            update = true;
+        }
+
+        function clear() {
+            ctx.clearRect(0, 0, c.width, c.height);
+        }
+
+        function updateText(polar, name) {
+            if (update) {
+                ctx.fillText(name, (polar[0] * Math.cos(-polar[1])) + window.innerWidth * 0.97 * 0.5,
+                    (polar[0] * Math.sin(-polar[1])) + window.innerWidth * 0.97 * 0.5);
+            }
+        }
+
+        function updateTextMoon(polarMoon, polarPlanet, name) {
+            if (update) {
+                ctx.fillText(name,
+                    (polarMoon[0] * Math.cos(-polarMoon[1])) + (polarPlanet[0] * Math.cos(-polarPlanet[1])) + window.innerWidth * 0.97 * 0.5,
+                    (polarMoon[0] * Math.sin(-polarMoon[1])) + (polarPlanet[0] * Math.sin(-polarPlanet[1])) + window.innerWidth * 0.97 * 0.5);
+            }
+        }
+    </script>
     <script>
         var scene = new THREE.Scene();
 
         var canvas = document.querySelector('#c');
-        var aspect_ratio = window.innerWidth / window.innerHeight;
+        var aspect_ratio = 1;
         var above_cam = new THREE.PerspectiveCamera(75, aspect_ratio, 0.01, 1e6)
-        above_cam.position.z = 25000;
+        above_cam.position.z = 50000;
         scene.add(above_cam);
 
         var earth_mars_cam = new THREE.PerspectiveCamera(75, aspect_ratio, 1, 1e6);
-        scene.add(earth_mars_cam);
+        //        scene.add(earth_mars_cam);
 
         var earth_moon_cam = new THREE.PerspectiveCamera(75, aspect_ratio, 1, 1e6);
-        scene.add(earth_moon_cam);
+        //        scene.add(earth_moon_cam);
 
         var camera = above_cam;
         var renderer = new THREE.WebGLRenderer({
             canvas
         });
-        renderer.setSize(window.innerWidth - 50, window.innerHeight - 50);
+        renderer.setSize(window.innerWidth * 0.97, window.innerWidth * 0.97);
         document.body.appendChild(renderer.domElement);
 
         document.body.style.backgroundColor = 'black';
 
         //in AE * 1000 bzw e3
+        geo_resolution = 30;
+
         //Sonne
         var surface = new THREE.MeshPhongMaterial({
             ambient: 0xFFD700
         });
-        var star = new THREE.SphereGeometry(150, 20, 20);
+        var star = new THREE.SphereGeometry(4.6547587, geo_resolution, geo_resolution);
         var sun = new THREE.Mesh(star, surface);
         scene.add(sun);
 
@@ -61,7 +101,7 @@
             ambient: 0x1a1a1a,
             color: 0x555555
         });
-        var planet = new THREE.SphereGeometry(60, 20, 20);
+        var planet = new THREE.SphereGeometry(3.2616774e-2 / 2, geo_resolution, geo_resolution);
         var merkur = new THREE.Mesh(planet, surface);
         merkur.position.set(387, 0, 0);
         scene.add(merkur);
@@ -71,7 +111,7 @@
             ambient: 0x1a1a1a,
             color: 0xffff44
         });
-        var planet = new THREE.SphereGeometry(60, 20, 20);
+        var planet = new THREE.SphereGeometry(0.0404537843, geo_resolution, geo_resolution);
         var venus = new THREE.Mesh(planet, surface);
         venus.position.set(723, 0, 0);
         scene.add(venus);
@@ -81,7 +121,7 @@
             ambient: 0x1a1a1a,
             color: 0x0000cd
         });
-        var planet = new THREE.SphereGeometry(60, 20, 15);
+        var planet = new THREE.SphereGeometry(0.0852707324 / 2, geo_resolution, geo_resolution);
         var earth = new THREE.Mesh(planet, surface);
         earth.position.set(1e3, 0, 0);
         scene.add(earth);
@@ -91,11 +131,12 @@
             ambient: 0x1a1a1a,
             color: 0xffffff
         });
-        var planet = new THREE.SphereGeometry(50, 30, 25);
+        var planet = new THREE.SphereGeometry(0.02323562484 / 2, geo_resolution, geo_resolution);
         var moon = new THREE.Mesh(planet, surface);
         earth.add(earth_moon_cam);
-        earth.add(earth_mars_cam)
-        earth_moon_cam.rotation.set(Math.PI / 2, 0, 0);
+        earth.add(earth_mars_cam);
+        earth_moon_cam.position.x += 0.02323562484 / 2;
+        earth_mars_cam.position.x += 0.02323562484 / 2;
         scene.add(moon);
 
         //Mars
@@ -103,7 +144,7 @@
             ambient: 0x1a1a1a,
             color: 0xb22222
         });
-        var planet = new THREE.SphereGeometry(60, 20, 15);
+        var planet = new THREE.SphereGeometry(0.04540438957 / 2, geo_resolution, geo_resolution);
         var mars = new THREE.Mesh(planet, surface);
         mars.position.set(1.524e3, 0, 0);
         scene.add(mars);
@@ -113,7 +154,7 @@
             ambient: 0x1a1a1a,
             color: 0xb28222
         });
-        var planet = new THREE.SphereGeometry(60, 20, 15);
+        var planet = new THREE.SphereGeometry(0.95578900509 / 2, geo_resolution, geo_resolution);
         var jupiter = new THREE.Mesh(planet, surface);
         jupiter.position.set(5.203e3, 0, 0);
         scene.add(jupiter);
@@ -123,7 +164,7 @@
             ambient: 0x1a1a1a,
             color: 0xb24222
         });
-        var planet = new THREE.SphereGeometry(60, 20, 15);
+        var planet = new THREE.SphereGeometry(0.80573339337 / 2, geo_resolution, geo_resolution);
         var saturn = new THREE.Mesh(planet, surface);
         saturn.position.set(9.5826e3, 0, 0);
         scene.add(saturn);
@@ -133,7 +174,7 @@
             ambient: 0x1a1a1a,
             color: 0x7777aa
         });
-        var planet = new THREE.SphereGeometry(60, 20, 15);
+        var planet = new THREE.SphereGeometry(0.34170272452 / 2, geo_resolution, geo_resolution);
         var uranus = new THREE.Mesh(planet, surface);
         uranus.position.set(19.201e3, 0, 0);
         scene.add(uranus);
@@ -143,7 +184,7 @@
             ambient: 0x1a1a1a,
             color: 0x2222aa
         });
-        var planet = new THREE.SphereGeometry(60, 20, 15);
+        var planet = new THREE.SphereGeometry(0.33107423099 / 2, geo_resolution, geo_resolution);
         var neptun = new THREE.Mesh(planet, surface);
         neptun.position.set(30.070e3, 0, 0);
         scene.add(neptun);
@@ -153,22 +194,22 @@
             ambient: 0x1a1a1a,
             color: 0xd2b48c
         });
-        var planet = new THREE.SphereGeometry(60, 20, 15);
+        var planet = new THREE.SphereGeometry(0.01586920983 / 2, geo_resolution, geo_resolution);
         var pluto = new THREE.Mesh(planet, surface);
         pluto.position.set(39.482e3, 0, 0);
         scene.add(pluto);
 
-        var time = Math.floor(Math.random() * 100000),
+        var time = Math.floor(Math.random() * 1e8),
             speed = 1,
             pause = false;
 
-        function pos_planet(T, e, a, tag) {
+        function polar_planet(T, e, a, tag) {
             M = 2 * Math.PI / T * tag;
             E = M
             for (i = 0; i < 5; i++) E -= ((M - E + e * Math.sin(E)) / (e * Math.cos(E) - 1));
             r = a * (1 - e * Math.cos(E));
             v = 2 * Math.atan(Math.sqrt((1 + e) / (1 - e)) * Math.tan(E));
-            return [r * Math.cos(v), r * Math.sin(v)];
+            return [r, v];
         }
 
         function animate() {
@@ -178,35 +219,50 @@
             if (pause) return;
             time += speed;
 
-            var me_pos = pos_planet(87.969, 0.205634, 387.099, time / 100);
-            merkur.position.set(me_pos[0], me_pos[1], 0);
+            clear();
+            updateText([0, 0], "Sonne");
 
-            var v_pos = pos_planet(224.701, 0.00677, 723, time / 100);
-            venus.position.set(v_pos[0], v_pos[1], 0);
+            var polar = polar_planet(87.969, 0.205634, 387.099, time / 100);
+            merkur.position.set(polar[0] * Math.cos(polar[1]), polar[0] * Math.sin(polar[1]), 0);
+            updateText([polar[0] / (above_cam.position.z * 1e-3), polar[1]], "Merkur");
 
-            var e_pos = pos_planet(365.256, 0.0167, 1e3, time / 100);
-            earth.position.set(e_pos[0], e_pos[1], 0);
+            var polar = polar_planet(224.701, 0.00677, 723, time / 100);
+            venus.position.set(polar[0] * Math.cos(polar[1]), polar[0] * Math.sin(polar[1]), 0);
+            updateText([polar[0] / (above_cam.position.z * 1e-3), polar[1]], "Venus");
 
-            var mo_pos = pos_planet(27.3217, 0.0549, 70, time / 100); // Abstand zu Erde nicht Maßstabsgetreu
-            moon.position.set(mo_pos[0] + e_pos[0], mo_pos[1] + e_pos[1], 0);
+            var polar = polar_planet(365.256, 0.0167, 1e3, time / 100);
+            var polar_e = polar
+            earth.position.set(polar[0] * Math.cos(polar[1]), polar[0] * Math.sin(polar[1]), 0);
+            updateText([polar[0] / (above_cam.position.z * 1e-3), polar[1]], "Erde");
 
-            var ma_pos = pos_planet(686.980, 0.0935, 1.524e3, time / 100);
-            mars.position.set(ma_pos[0], ma_pos[1], 0);
+            var polar = polar_planet(27.3217, 0.0549, 2.5695552898, time / 100);
+            moon.position.set(polar[0] * Math.cos(polar[1]) + polar_e[0] * Math.cos(polar_e[1]),
+                polar[0] * Math.sin(polar[1]) + polar_e[0] * Math.sin(polar_e[1]), 0);
+            updateTextMoon([polar[0] / (above_cam.position.z * 1e-3), polar[1]], [polar_e[0] / (above_cam.position.z * 1e-3), polar_e[1]], "Mond");
 
-            var j_pos = pos_planet(4330, 0.0484, 5.203e3, time / 100);
-            jupiter.position.set(j_pos[0], j_pos[1], 0);
+            var polar = polar_planet(686.980, 0.0935, 1.524e3, time / 100);
+            mars.position.set(polar[0] * Math.cos(polar[1]), polar[0] * Math.sin(polar[1]), 0);
+            updateText([polar[0] / (above_cam.position.z * 1e-3), polar[1]], "Mars");
 
-            var s_pos = pos_planet(10751.805, 0.05648, 9.5826e3, time / 100);
-            saturn.position.set(s_pos[0], s_pos[1], 0);
+            var polar = polar_planet(4330, 0.0484, 5.203e3, time / 100);
+            jupiter.position.set(polar[0] * Math.cos(polar[1]), polar[0] * Math.sin(polar[1]), 0);
+            updateText([polar[0] / (above_cam.position.z * 1e-3), polar[1]], "Jupiter");
 
-            var u_pos = pos_planet(30664.015, 0.0472, 19.201e3, time / 100);
-            uranus.position.set(u_pos[0], u_pos[1], 0);
+            var polar = polar_planet(10751.805, 0.05648, 9.5826e3, time / 100);
+            saturn.position.set(polar[0] * Math.cos(polar[1]), polar[0] * Math.sin(polar[1]), 0);
+            updateText([polar[0] / (above_cam.position.z * 1e-3), polar[1]], "Saturn");
 
-            var n_pos = pos_planet(60148.35, 0.00859, 30.070e3, time / 100);
-            neptun.position.set(n_pos[0], n_pos[1], 0);
+            var polar = polar_planet(30664.015, 0.0472, 19.201e3, time / 100);
+            uranus.position.set(polar[0] * Math.cos(polar[1]), polar[0] * Math.sin(polar[1]), 0);
+            updateText([polar[0] / (above_cam.position.z * 1e-3), polar[1]], "Uranus");
 
-            var p_pos = pos_planet(90498, 0.2488, 39.482e3, time / 100);
-            pluto.position.set(p_pos[0], p_pos[1], 0);
+            var polar = polar_planet(60148.35, 0.00859, 30.070e3, time / 100);
+            neptun.position.set(polar[0] * Math.cos(polar[1]), polar[0] * Math.sin(polar[1]), 0);
+            updateText([polar[0] / (above_cam.position.z * 1e-3), polar[1]], "Neptun");
+
+            var polar = polar_planet(90498, 0.2488, 39.482e3, time / 100);
+            pluto.position.set(polar[0] * Math.cos(polar[1]), polar[0] * Math.sin(polar[1]), 0);
+            updateText([polar[0] / (above_cam.position.z * 1e-3), polar[1]], "Pluto");
 
             var y_diff = mars.position.y - earth.position.y;
             var x_diff = mars.position.x - earth.position.x;
@@ -223,22 +279,22 @@
 
         animate();
 
-        //        var stars = new THREE.Geometry();
-        //        while (stars.vertices.length < 1e4) {
-        //            var lat = Math.PI * Math.random() - Math.PI / 2;
-        //            var lon = 2 * Math.PI * Math.random();
-        //
-        //            stars.vertices.push(new THREE.Vector3(
-        //                1e5 * Math.cos(lon) * Math.cos(lat),
-        //                1e5 * Math.sin(lon) * Math.cos(lat),
-        //                1e5 * Math.sin(lat)
-        //            ));
-        //        }
-        //        var star_stuff = new THREE.ParticleBasicMaterial({
-        //            size: 500
-        //        });
-        //        var star_system = new THREE.ParticleSystem(stars, star_stuff);
-        //        scene.add(star_system);
+        var stars = new THREE.Geometry();
+        while (stars.vertices.length < 1e4) {
+            var lat = Math.PI * Math.random() - Math.PI / 2;
+            var lon = 2 * Math.PI * Math.random();
+
+            stars.vertices.push(new THREE.Vector3(
+                1e5 * Math.cos(lon) * Math.cos(lat),
+                1e5 * Math.sin(lon) * Math.cos(lat),
+                1e5 * Math.sin(lat)
+            ));
+        }
+        var star_stuff = new THREE.ParticleBasicMaterial({
+            size: 1
+        });
+        var star_system = new THREE.ParticleSystem(stars, star_stuff);
+        scene.add(star_system);
 
         document.addEventListener("keydown", function(event) {
             var code = event.keyCode;
@@ -251,17 +307,86 @@
                     break;
                 case 107: //+
                     speed++;
+                    document.getElementById("speed").innerHTML = speed;
                     break;
                 case 109: //-
                     if (speed > 1) speed--;
+                    document.getElementById("speed").innerHTML = speed;
+                    break;
+                case 87: //w
+                    //                    camera.fov -= 10;
+                    //                    camera.updateProjectionMatrix();
+                    if (above_cam.position.z > 500) above_cam.position.z -= 500;
+                    document.getElementById("distance").innerHTML = above_cam.position.z / 1e3;
+                    break;
+                case 83: //s
+                    //                    camera.fov += 10;
+                    //                    camera.updateProjectionMatrix();
+                    if (above_cam.position.z < 90000) above_cam.position.z += 500;
+                    document.getElementById("distance").innerHTML = above_cam.position.z / 1e3;
                     break;
             }
         });
 
         function changeCamera() {
-            if (camera == above_cam) camera = earth_mars_cam;
-            else if (camera == earth_mars_cam) camera = earth_moon_cam;
-            else camera = above_cam;
+            if (camera == above_cam) {
+                camera = earth_mars_cam;
+                disable_update();
+            } else if (camera == earth_mars_cam) {
+                camera = earth_moon_cam;
+                disable_update();
+            } else {
+                camera = above_cam;
+                enable_update();
+            }
+        }
+
+        function scale_sun(val) {
+            sun.scale.x = 4.6547587 * 2 * val;
+            sun.scale.y = 4.6547587 * 2 * val;
+            sun.scale.z = 4.6547587 * 2 * val;
+        }
+
+        function scale(val) {
+            merkur.scale.x = 3.2616774e-2 * val;
+            merkur.scale.y = 3.2616774e-2 * val;
+            merkur.scale.z = 3.2616774e-2 * val;
+
+            venus.scale.x = 0.0404537843 * 2 * val;
+            venus.scale.y = 0.0404537843 * 2 * val;
+            venus.scale.z = 0.0404537843 * 2 * val;
+
+            earth.scale.x = 0.0852707324 * val;
+            earth.scale.y = 0.0852707324 * val;
+            earth.scale.z = 0.0852707324 * val;
+
+            moon.scale.x = 0.02323562484 * val;
+            moon.scale.y = 0.02323562484 * val;
+            moon.scale.z = 0.02323562484 * val;
+
+            mars.scale.x = 0.04540438957 * val;
+            mars.scale.y = 0.04540438957 * val;
+            mars.scale.z = 0.04540438957 * val;
+
+            jupiter.scale.x = 0.95578900509 * val;
+            jupiter.scale.y = 0.95578900509 * val;
+            jupiter.scale.z = 0.95578900509 * val;
+
+            saturn.scale.x = 0.80573339337 * val;
+            saturn.scale.y = 0.80573339337 * val;
+            saturn.scale.z = 0.80573339337 * val;
+
+            uranus.scale.x = 0.34170272452 * val;
+            uranus.scale.y = 0.34170272452 * val;
+            uranus.scale.z = 0.34170272452 * val;
+
+            neptun.scale.x = 0.33107423099 * val;
+            neptun.scale.y = 0.33107423099 * val;
+            neptun.scale.z = 0.33107423099 * val;
+
+            pluto.scale.x = 0.01586920983 * val;
+            pluto.scale.y = 0.01586920983 * val;
+            pluto.scale.z = 0.01586920983 * val;
         }
     </script>
 
@@ -269,9 +394,37 @@
     <h5 style="color: white; margin-top: 0px;">
         C = Kamera wechseln<br />
         P = Pause<br />
-        + = schneller<br />
-        - = langsamer <br />
-        Die Planeten haben noch nicht die richtigen Größen aber die Abstände (außer bei Mond) und Umlaufbahnen stimmen.
+        w/s = Zoomen<br />
+        +/- = schnelle/langsamer<br /><br />
+        aktuelle Geschwindikeit: <a id="speed">1</a><br />
+        Abstand: <a id="distance">50</a> AE <br />
+        Planetengröße (1 = reale Größe): <a id="size">1</a><br />
+        <input type="range" min="1" max="7500" value="1" id="planet_size"> <br />
+        Sonnengröße (1 = reale Größe): <a id="size_s">1</a><br />
+        <input type="range" min="1" max="25" value="1" id="sun_size"> <br />
+        Planetennamen verstecken: <input type="checkbox" id="check_names" onclick="toggleNames()">
     </h5>
+    <script>
+        var slider_p = document.getElementById("planet_size");
+        slider_p.oninput = function() {
+            scale(slider_p.value);
+            document.getElementById("size").innerHTML = slider_p.value;
+        }
+
+        var slider_s = document.getElementById("sun_size");
+        slider_s.oninput = function() {
+            scale_sun(slider_s.value);
+            document.getElementById("size_s").innerHTML = slider_s.value;
+        }
+
+        function toggleNames() {
+            var checkBox = document.getElementById("check_names");
+            if (checkBox.checked == true) {
+                disable_update();
+            } else if (camera == above_cam) {
+                enable_update();
+            }
+        }
+    </script>
     <a href="https://whg-astro-ag.com/das-planetensystem/das-planetensystem-in-digital/">zurück zur Website</a>
 </body></html>
