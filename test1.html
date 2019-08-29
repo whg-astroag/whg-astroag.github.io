@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="description" content="Seite der Astronnomie AG am Leverkusener Wener-Heisenberg-Gymnasium">
+    <meta name="author" content="AstronomieAG">
+    <link rel="icon" href="images/cropped-supermoon-n-14-11-2016-g11.png">
+    <title>Test</title>
+</head>
+
+<body>
+    <h1 style="color: white">Das Planetensystem</h1>
+    <h5 style="color: white">Vollbildmodus (F11) wird empfohlen.</h5>
+
+    <script src="js/three.min.js"></script>
+    <script src="js/three.min.js"></script>
+    <canvas style="z-index: -9; width: 97vw; height: 97vw" id="c">Your browser does not support the HTML 5 Canvas. </canvas>
+    <script>
+        scene = new THREE.Scene();
+
+        var canvas = document.querySelector('#c');
+        var aspect_ratio = 1;
+        var camera = new THREE.PerspectiveCamera(75, aspect_ratio, 0.01, 1e6);
+        camera.position.z = 500;
+        scene.add(camera);
+
+        var geometry = new THREE.IcosahedronGeometry(200, 1);
+        var material = new THREE.MeshBasicMaterial({
+            color: 0x000000,
+            wireframe: true,
+            wireframeLinewidth: 2
+        });
+
+        var mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+
+        function create_text(string) {
+            var canvas1 = document.createElement('canvas');
+            canvas1.width = 2024;
+            canvas1.height = 2024;
+
+            var context1 = canvas1.getContext('2d');
+            context1.font = "Bold 100px Arial";
+            context1.fillStyle = "rgba(0,0,0,1)";
+            context1.fillText(string, 0, 100);
+
+            // canvas contents will be used for a texture
+            var texture1 = new THREE.Texture(canvas1)
+            texture1.needsUpdate = true;
+
+            var material1 = new THREE.MeshBasicMaterial({
+                map: texture1,
+                side: THREE.DoubleSide
+            });
+            material1.transparent = true;
+
+            return new THREE.Mesh(
+                new THREE.PlaneGeometry(400, 400),
+                material1
+            );
+        }
+
+        mesh1 = create_text("test");
+        scene.add(mesh1);
+        mesh2 = create_text("t35t 1234");
+        scene.add(mesh2);
+
+        var renderer = new THREE.WebGLRenderer({
+            canvas
+        });
+        renderer.setSize(window.innerWidth * 0.97, window.innerWidth * 0.97);
+        document.body.appendChild(renderer.domElement);
+
+        time = 0;
+
+        function animate() {
+            time += 1;
+            requestAnimationFrame(animate);
+            //            console.log(time);
+
+            mesh.rotation.x = Date.now() * 0.0005;
+            mesh.rotation.y = Date.now() * 0.001;
+            mesh1.scale.set(time * 0.005, time * 0.005, time * 0.005);
+            if (time > 500) time = 0;
+
+            renderer.render(scene, camera);
+        }
+        animate();
+    </script>
+</body></html>
