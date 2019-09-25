@@ -14,6 +14,7 @@
             display: block;
 
         }
+
     </style>
 </head>
 
@@ -31,7 +32,7 @@
             P = Pause<br />
             w/s oder Pfeiltasten = Zoomen<br />
             +/- = schnelle/langsamer<br /><br />
-            aktuelle Geschwindikeit: <a id="speed">1</a> Tag(e)/Bild<br />
+            aktuelle Geschwindikeit: <a id="speed">0.01</a> Tag(e)/Bild<br />
             Abstand: <a id="distance">50</a> AE <br />
             Planetengröße + <a id="size">0</a> AE<br />
             <input type="range" min="0" max="75" value="0" id="planet_size"> <br />
@@ -95,6 +96,7 @@
                 context_t.fillText("Pause", 0, canvas_t.width / 3);
             }
         }
+
     </script>
     <script>
         var scene = new THREE.Scene();
@@ -153,22 +155,29 @@
         }
 
         function update_text(pos, index, moon) {
-            if (moon) moons_text[index].position.set(pos[0] + res + moons[index].scale.x, pos[1], pos[2] + 5000);
-            else planets_text[index].position.set(pos[0] + res + 10000000 + planets[index].scale.x, pos[1], pos[2] + 5000);
+            if (moon) moons_text[index].position.set(pos[0] /* + res + moons[index].scale.x*/ , pos[1], pos[2] /* + 5000*/ );
+            else planets_text[index].position.set(pos[0] /* + res + 10000000 + planets[index].scale.x*/ , pos[1], pos[2] /* + 5000*/ );
+        }
+
+        function get_lambda(c, p, a) {
+            return a / Math.sqrt((p.x - c.x) * (p.x - c.x) + (p.y - c.y) * (p.y - c.y) + (p.z - c.z) * (p.z - c.z));
         }
 
         function align_text() {
-            //            console.log(planets_text[0].position);
+            //            console.log(camera.position.z - planets_text[0].position.z);
             for (i = 0; i < planets_text.length; i++) {
-                planets_text[i].position.set(camera.position.x + 0.1 * (planets[i].position.x - camera.position.x),
-                    camera.position.y + 0.1 * (planets[i].position.y - camera.position.y),
-                    camera.position.z + 0.1 * (planets[i].position.z - camera.position.z));
+                l = get_lambda(camera.position, planets_text[i].position, 4000);
+                //                console.log(l);
+                planets_text[i].position.set(camera.position.x + l * (planets[i].position.x - camera.position.x),
+                    camera.position.y + l * (planets[i].position.y - camera.position.y),
+                    camera.position.z + l * (planets[i].position.z - camera.position.z));
                 planets_text[i].rotation = camera.rotation;
             }
             for (i = 0; i < moons_text.length; i++) {
-                moons_text[i].position.set(camera.position.x + 0.1 * (moons[i].position.x - camera.position.x),
-                    camera.position.y + 0.1 * (moons[i].position.y - camera.position.y),
-                    camera.position.z + 0.1 * (moons[i].position.z - camera.position.z));
+                l = get_lambda(camera.position, moons_text[i].position, 4000);
+                moons_text[i].position.set(camera.position.x + l * (moons[i].position.x - camera.position.x),
+                    camera.position.y + l * (moons[i].position.y - camera.position.y),
+                    camera.position.z + l * (moons[i].position.z - camera.position.z));
                 moons_text[i].rotation = camera.rotation;
             }
         }
@@ -363,39 +372,45 @@
         }
         for (i = 0; i < moons.length; i++) {
             moons_text.push(create_text(moons[i].name, 750));
-            console.log(moons[i].name)
+            //            console.log(moons[i].name)
             //            moons_text[i].position = moons[i].position;
             // moons_text[i].position.z += 10000;
             scene.add(moons_text[i]);
         }
-
+        // [[Siderische Umlaufzeit, Exzentrizität, Große Halbachse, Bahnneigung (Rad), Name]]
         const planets_const = [
-            [0, 0, 0, "Sonne"],
-            [87.969, 0.205634, 387.099, "Merkur"],
-            [224.701, 0.00677, 723, "Venus"],
-            [365.256, 0.0167, 1e3, "Erde"],
-            [686.980, 0.0935, 1.524e3, "Mars"],
-            [4330, 0.0484, 5.203e3, "Jupiter"],
-            [10751.805, 0.05648, 9.5826e3, "Saturn"],
-            [30664.015, 0.0472, 19.201e3, "Uranus"],
-            [60148.35, 0.00859, 30.070e3, "Neptun"]
+            [0, 0, 0, 0, "Sonne"],
+            [87.969, 0.205634, 387.099, 0.1222580452, "Merkur"],
+            [224.701, 0.00677, 723, 0.059253928, "Venus"],
+            [365.256, 0.0167, 1e3, 0, "Erde"],
+            [686.980, 0.0935, 1.524e3, 0.03228859, "Mars"],
+            [4330, 0.0484, 5.203e3, 0.022776547, "Jupiter"],
+            [10751.805, 0.05648, 9.5826e3, 0.043353979, "Saturn"],
+            [30664.015, 0.0472, 19.201e3, 0.01343904, "Uranus"],
+            [60148.35, 0.00859, 30.070e3, 0.030874874, "Neptun"]
         ];
+        // [[Siderische Umlaufzeit, Exzentrizität, Große Halbachse, Bahnneigung (Rad), Name, index des Mutterplaneten]]
         const moons_const = [
-            [27.3217, 0.0549, 2.5695552898, "Mond", 3],
-            [0.31891, 0.0041, 6.26881e-2, "Phobos", 4],
-            [1.262, 0.009, 0.156813729, "Deimos", 4],
-            [1.769, 0.0041, 2.81955885, "Io", 5],
-            [3.551, 0.009, 4.48602642, "Europa", 5],
-            [7.155, 0.001, 7.155182056, "Kallisto", 5],
-            [16.689, 0.007, 12.58507218, "Ganymed", 5]
+            [27.3217, 0.0549, 2.5695552898, 0.08979719, "Mond", 3],
+            [0.31891, 0.0041, 6.26881e-2, 0.018762289, "Phobos", 4],
+            [1.262, 0.009, 0.156813729, 0.01623156, "Deimos", 4],
+            [1.769, 0.0041, 2.81955885, 0.0006981317, "Io", 5],
+            [3.551, 0.009, 4.48602642, 0.470, "Europa", 5],
+            [7.155, 0.001, 7.155182056, 0.008901179, "Kallisto", 5],
+            [16.689, 0.007, 12.58507218, 0.003141593, "Ganymed", 5]
         ];
 
-        const planets_start_angle = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-        const moons_start_angle = [0, 0, 0, 0, 0];
+        // 01.06.2019 00:00:00
+        //        const planets_start_angle = [180, 180, 180, 180, 180, 180, 180, 180, 180];
+        const planets_start_angle = [Math.PI, 0, Math.PI, 0, Math.PI, 0, Math.PI, 0, Math.PI];
+        //        const planets_start_angle = [0, 124, 21, 0, 118, 258, 285, 32, 346];
+        //        const planets_start_angle = [0, 2.1642082724676, 0.3665191429179, 0, 2.0594885173482, 
+        //                                     4.5029494701342, 4.9741883681715, 0.5585053606368, 6.0388392118854];
+        const moons_start_angle = [0, 0, 0, 0, 0, 0, 0];
 
         //time = 0 ist das Datum der letzten vollstaendigen Konjunktion
         var time = Math.floor(Math.random() * 1e8);
-        var speed = 1;
+        var speed = 0.01;
         var pause = false;
 
         function toggle_text(val) {
@@ -442,27 +457,37 @@
             }
 
             for (j = 0; j < planets_const.length; j++) {
+                //                console.log(planets[j].position);
                 if (planets_const[j][0] == 0 & planets_const[j][1] == 0 & planets_const[j][2] == 0) {
                     polar = [0, 0];
                 } else {
-                    polar = polar_planet(planets_const[j][0], planets_const[j][1], planets_const[j][2], time / 100);
+                    polar = polar_planet(planets_const[j][0], planets_const[j][1], planets_const[j][2], time);
                 }
                 polar[0] += planets_start_angle[j];
-                update_text([polar[0] * Math.cos(polar[1]), polar[0] * Math.sin(polar[1]), 0], j, false);
-                planets[j].position.set(polar[0] * Math.cos(polar[1]), polar[0] * Math.sin(polar[1]), 0);
+                //                update_text([polar[0] * Math.cos(polar[1]), polar[0] * Math.sin(polar[1]), 0], j, false);
+                update_text([0, 0, 0], j, false);
+                planets[j].position.set(polar[0] * Math.cos(polar[1]),
+                    polar[0] * Math.sin(polar[1]) * Math.cos(planets_const[j][3]),
+                    polar[0] * Math.sin(planets_const[j][3]) * Math.sin(polar[1]));
             }
+            //            console.log("\n\n")
 
             for (j = 0; j < moons_const.length; j++) {
-                polar = polar_planet2(moons_const[j][0], moons_const[j][1], moons_const[j][2], time / 100);
+                polar = polar_planet2(moons_const[j][0], moons_const[j][1], moons_const[j][2], time);
                 polar[0] += moons_start_angle[j];
-                polar_planet = polar_planet2(planets_const[moons_const[j][4]][0], planets_const[moons_const[j][4]][1], planets_const[moons_const[j][4]][2], time / 100);
-                polar_planet[0] += planets_start_angle[j];
+                //                polar_planet = polar_planet2(planets_const[moons_const[j][4]][0], planets_const[moons_const[j][4]][1], planets_const[moons_const[j][4]][2], time);
+                //                polar_planet[0] += planets_start_angle[j];
 
-                update_text([(polar[0] + moon_orbit_add) * Math.cos(polar[1]) + polar_planet[0] * Math.cos(polar_planet[1]),
-                    (polar[0] + moon_orbit_add) * Math.sin(polar[1]) + polar_planet[0] * Math.sin(polar_planet[1]), 0
+                update_text([(polar[0] + moon_orbit_add) * Math.cos(polar[1]) + planets[moons_const[j][5]].position.x,
+                    (polar[0] + moon_orbit_add) * Math.sin(polar[1]) * Math.cos(moons_const[j][3]) + planets[moons_const[j][5]].position.y,
+                    (polar[0] + moon_orbit_add) * Math.sin(moons_const[j][3]) * Math.sin(polar[1]) + planets[moons_const[j][5]].position.z
                 ], j, true);
-                moons[j].position.set((polar[0] + moon_orbit_add) * Math.cos(polar[1]) + polar_planet[0] * Math.cos(polar_planet[1]),
-                    (polar[0] + moon_orbit_add) * Math.sin(polar[1]) + polar_planet[0] * Math.sin(polar_planet[1]), 0);
+                //                moons[j].position.set((polar[0] + moon_orbit_add) * Math.cos(polar[1]) + polar_planet[0] * Math.cos(polar_planet[1]),
+                //                    (polar[0] + moon_orbit_add) * Math.sin(polar[1]) + polar_planet[0] * Math.sin(polar_planet[1]), 
+                //                    (polar[0] + moon_orbit_add) * Math.sin(moons_const[j][3]) * Math.sin(polar[1]));
+                moons[j].position.set((polar[0] + moon_orbit_add) * Math.cos(polar[1]) + planets[moons_const[j][5]].position.x,
+                    (polar[0] + moon_orbit_add) * Math.sin(polar[1]) * Math.cos(moons_const[j][3]) + planets[moons_const[j][5]].position.y,
+                    (polar[0] + moon_orbit_add) * Math.sin(moons_const[j][3]) * Math.sin(polar[1]) + planets[moons_const[j][5]].position.z);
             }
             update_cam();
         }
@@ -493,12 +518,12 @@
                     pause = !pause;
                     break;
                 case 107: //+
-                    speed++;
-                    document.getElementById("speed").innerHTML = speed;
+                    speed += 0.01;
+                    document.getElementById("speed").innerHTML = Math.round(speed * 10000) / 10000;
                     break;
                 case 109: //-
-                    if (speed > 1) speed--;
-                    document.getElementById("speed").innerHTML = speed;
+                    if (speed > 0.01) speed -= 0.01;
+                    document.getElementById("speed").innerHTML = Math.round(speed * 10000) / 10000;
                     break;
                 case 38: // Pfeil hoch
                     event.preventDefault();
@@ -557,12 +582,12 @@
         }
 
         function update_cam() {
+            toggle_text(!document.getElementById("check_names").checked);
             if (f_source == 0) {
-                toggle_text(!document.getElementById("check_names").checked);
+                camera.rotation.set(0, 0, 0);
                 if (focus < 9) camera.position.set(planets[focus].position.x, planets[focus].position.y, planets[focus].position.z + 50000);
                 else camera.position.set(moons[focus - 9].position.x, moons[focus - 9].position.y, moons[focus - 9].position.z + 50000);
             } else {
-                toggle_text(false);
                 if (f_source - 1 == focus) {
                     alert("Quelle und Fokus dürfen nicht gleich sein!");
                     pause = true;
@@ -572,23 +597,30 @@
                             camera.position = planets[f_source - 1].position;
                             var y_diff = planets[focus].position.y - planets[f_source - 1].position.y;
                             var x_diff = planets[focus].position.x - planets[f_source - 1].position.x;
+                            var z_diff = planets[focus].position.z - planets[f_source - 1].position.z;
                         } else {
                             camera.position = planets[f_source - 1].position;
                             var y_diff = moons[focus - 9].position.y - planets[f_source - 1].position.y;
                             var x_diff = moons[focus - 9].position.x - planets[f_source - 1].position.x;
+                            var z_diff = moons[focus - 9].position.z - planets[f_source - 1].position.z;
                         }
                     } else {
                         if (focus < 9) {
                             camera.position = moons[f_source - 10].position;
                             var y_diff = planets[focus].position.y - moons[f_source - 10].position.y;
                             var x_diff = planets[focus].position.x - moons[f_source - 10].position.x;
+                            var z_diff = planets[focus].position.z - moons[f_source - 10].position.z;
                         } else {
                             camera.position = moons[f_source - 10].position;
                             var y_diff = moons[focus - 9].position.y - moons[f_source - 10].position.y;
                             var x_diff = moons[focus - 9].position.x - moons[f_source - 10].position.x;
+                            var z_diff = moons[focus - 9].position.z - moons[f_source - 10].position.z;
                         }
                     }
                     var angle = Math.atan2(x_diff, y_diff);
+                    var theta = Math.atan2(z_diff, x_diff);
+                    //                    var theta = Math.atan2(y_diff, z_diff);
+                    //                    console.log(theta);
                     camera.rotation.set(Math.PI / 2, -angle, 0);
                 }
             }
@@ -604,6 +636,7 @@
             changed_focus = true;
             f_source = parseInt(val);
         }
+
     </script>
     <style>
         #dragableheader {
@@ -620,6 +653,7 @@
             border: 1px solid #333333;
             text-align: center;
         }
+
     </style>
     <script>
         dragElement(document.getElementById("dragable"));
@@ -667,6 +701,7 @@
                 document.onmousemove = null;
             }
         }
+
     </script>
     <script>
         var slider_p = document.getElementById("planet_size");
@@ -696,7 +731,10 @@
         drop_fs.oninput = function() {
             update_f_source(drop_fs.value);
         }
+
     </script>
     <br />
     <a href="https://whg-astro-ag.com/das-planetensystem/das-planetensystem-in-digital/">zurück zur Website</a>
-</body></html>
+</body>
+
+</html>
